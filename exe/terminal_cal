@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "terminal_cal"
+
+TerminalCal::App.run
