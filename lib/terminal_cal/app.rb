@@ -1,7 +1,7 @@
 module TerminalCal
   class App
-    DATE_FMT = '%m/%d/%Y'.freeze
-    TIME_FMT = '%I:%M%p'.freeze
+    DATE_FMT = '%m/%d'.freeze
+    TIME_FMT = '%I:%M %p'.freeze
 
     def initialize
       @config = Config.load
@@ -32,14 +32,22 @@ module TerminalCal
     end
 
     def load_events
-      @parser.from_string(read_cal_file).events.each do |event|
-        if event.starts_at.strftime(DATE_FMT) == @today
+      now = Time.now
+      events = @parser.from_string(read_cal_file).events
+
+      events.sort_by { |e| e.starts_at.to_i }.each do |event|
+        next unless event.starts_at.strftime(DATE_FMT) == @today
+
+          if (event.starts_at..event.ends_at).include?(now)
+            active = "==="
+          end
+
 
           @events << Event.new(date: event.starts_at.strftime(DATE_FMT),
-                             start_time: event.starts_at.strftime(TIME_FMT),
-                             end_time: event.ends_at.strftime(TIME_FMT),
-                             summary: event.summary)
-        end
+                               start_time: event.starts_at.strftime(TIME_FMT),
+                               end_time: "#{event.ends_at.strftime(TIME_FMT)} #{active}",
+                               summary: event.summary)
+      #  end
       end
     end
 
