@@ -56,6 +56,8 @@ module TerminalCal
       cal.write(open(@ics) { |f| f.read } )
       cal.rewind
       cal.read
+    ensure
+      cal.close
     end
   end
 end
