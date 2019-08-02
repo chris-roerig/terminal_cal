@@ -2,4 +2,10 @@
 
 require "terminal_cal"
 
-TerminalCal::App.run
+begin
+  TerminalCal::App.run
+rescue TerminalCal::Errors::Error => error
+  puts error.message
+rescue TerminalCal::Errors::AppExit
+  puts 'Bye'
+end
